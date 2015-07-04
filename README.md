@@ -4,7 +4,7 @@ PetduinoSerial is a wrapper around the original [Petduino library](https://githu
 ## Installation
 1. Follow the standard [Petduino instalation instructions](https://github.com/circuitbeard/petduino).
 3. Download and install the latest [CmdMessenger arduino library](https://github.com/thijse/Arduino-CmdMessenger#downloading).
-4. Download this library from the [Releases page](https://github.com/circuitbeard/petduino-serial/releases).
+4. Download the latest PetduinoSerial library from the [Releases page](https://github.com/circuitbeard/petduino-serial/releases).
 5. Install this library using [the standard Arduino library install procedure](http://www.arduino.cc/en/Guide/Libraries#.UwxndHX5PtY).
 
 ## Getting Started
