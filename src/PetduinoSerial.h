@@ -41,7 +41,14 @@ class PetduinoSerial : public Petduino {
       };
 
       unsigned int tempBroadcastThreshold = 0;
+      unsigned int tempConsecutiveReadings = 0;
+      unsigned int tempReadingCount = 0;
+      int tempReadingDir = 0;
+
       unsigned int ldrBroadcastThreshold = 0;
+      unsigned int ldrConsecutiveReadings = 0;
+      unsigned int ldrReadingCount = 0;
+      int ldrReadingDir = 0;
 
       float lastTempReading = 0;
       int lastLdrReading = 0;
@@ -62,8 +69,8 @@ class PetduinoSerial : public Petduino {
 
       virtual void setNextState(unsigned int state, unsigned long interval);
 
-      virtual void setTemperatureBroadcastThreshold(unsigned int threshold);
-      virtual void setLightLevelBroadcastThreshold(unsigned int threshold);
+      virtual void setTemperatureBroadcastThreshold(unsigned int threshold, unsigned int consecutiveReadings = 3);
+      virtual void setLightLevelBroadcastThreshold(unsigned int threshold, unsigned int consecutiveReadings = 3);
 
       // Handlers
       void onSetState();

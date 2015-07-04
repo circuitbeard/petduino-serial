@@ -72,22 +72,53 @@ void PetduinoSerial::update() {
   }
 
   // Check for temperature state changed
-  //TODO: Need debounce or something because individual readings can be eratic
   if(tempBroadcastThreshold > 0){
     float reading = getTemperature();
     int readingInt = (int)floor(reading + 0.5);
-    if((readingInt%tempBroadcastThreshold) == 0 && abs(lastTempReading - reading) >= tempBroadcastThreshold) {
-      lastTempReading = reading;
-      cmdMessenger.sendCmd(TEMPERATURE_EVENT, reading);
+    int readingDir = (lastTempReading - reading)/abs(lastTempReading - reading);
+    if(abs(lastTempReading - reading) >= tempBroadcastThreshold) {
+      if(tempReadingDir == 0 || tempReadingDir == readingDir) {
+        if(tempReadingCount >= tempConsecutiveReadings){
+          tempReadingCount = 0;
+          tempReadingDir = 0;
+          lastTempReading = reading;
+          cmdMessenger.sendCmd(TEMPERATURE_EVENT, reading);
+        } else  {
+          tempReadingCount++;
+          tempReadingDir = readingDir;
+        }
+      } else {
+        tempReadingCount = 0;
+        tempReadingDir = readingDir;
+      }
+    } else {
+      tempReadingCount = 0;
+      tempReadingDir = 0;
     }
   }
 
   // Check for light level state changes
   if(ldrBroadcastThreshold > 0) {
     int reading = getLightLevel();
-    if((reading%ldrBroadcastThreshold) == 0 && abs(lastLdrReading - reading) >= ldrBroadcastThreshold) {
-      lastLdrReading = reading;
-      cmdMessenger.sendCmd(LIGHT_LEVEL_EVENT, reading);
+    int readingDir = (lastLdrReading - reading)/abs(lastLdrReading - reading);
+    if(abs(lastLdrReading - reading) >= ldrBroadcastThreshold) {
+      if(ldrReadingDir == 0 || ldrReadingDir == readingDir) {
+        if(ldrReadingCount >= ldrConsecutiveReadings) {
+          ldrReadingCount = 0;
+          ldrReadingDir = 0;
+          lastLdrReading = reading;
+          cmdMessenger.sendCmd(LIGHT_LEVEL_EVENT, reading);
+        } else {
+          ldrReadingCount++;
+          ldrReadingDir = readingDir;
+        }
+      } else {
+        ldrReadingCount = 0;
+        ldrReadingDir = readingDir;
+      }
+    } else {
+      ldrReadingCount = 0;
+      ldrReadingDir = 0;
     }
   }
 
@@ -132,12 +163,18 @@ void PetduinoSerial::setNextState(unsigned int state, unsigned long interval) {
 
 }
 
-void PetduinoSerial::setTemperatureBroadcastThreshold(unsigned int threshold) {
+// Sets the threshold  by which a temperature reading must change, and for how
+// many readings untill it should be auto broadcast
+void PetduinoSerial::setTemperatureBroadcastThreshold(unsigned int threshold, unsigned int consecutiveReadings) {
   tempBroadcastThreshold = threshold;
+  tempConsecutiveReadings = consecutiveReadings;
 }
 
-void PetduinoSerial::setLightLevelBroadcastThreshold(unsigned int threshold) {
+// Sets the threshold  by which a light level reading must change, and for how
+// many readings untill it should be auto broadcast
+void PetduinoSerial::setLightLevelBroadcastThreshold(unsigned int threshold, unsigned int consecutiveReadings) {
   ldrBroadcastThreshold = threshold;
+  ldrConsecutiveReadings = consecutiveReadings;
 }
 
 // Set state command handler
