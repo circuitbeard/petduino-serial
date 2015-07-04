@@ -40,6 +40,7 @@ wait	KEYWORD2
 
 setTemperatureBroadcastThreshold KEYWORD2
 setLightLevelBroadcastThreshold KEYWORD2
+setOnDataCallback KEYWORD2
 onSetState KEYWORD2
 onGetState KEYWORD2
 onSetLed KEYWORD2

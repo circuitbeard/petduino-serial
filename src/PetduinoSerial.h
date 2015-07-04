@@ -11,6 +11,11 @@
 #include <Petduino.h>
 #include <CmdMessenger.h>
 
+extern "C"
+{
+  typedef void(*onDataCallbackFunc) (char *data);
+}
+
 class PetduinoSerial : public Petduino {
 
     protected:
@@ -40,6 +45,7 @@ class PetduinoSerial : public Petduino {
         BTN2_EVENT
       };
 
+      // Variables
       unsigned int tempBroadcastThreshold = 0;
       unsigned int tempConsecutiveReadings = 0;
       unsigned int tempReadingCount = 0;
@@ -54,6 +60,8 @@ class PetduinoSerial : public Petduino {
       int lastLdrReading = 0;
       bool lastBtn1Reading = false;
       bool lastBtn2Reading = false;
+
+      onDataCallbackFunc onDataCallBack;
 
     public:
 
@@ -71,6 +79,7 @@ class PetduinoSerial : public Petduino {
 
       virtual void setTemperatureBroadcastThreshold(unsigned int threshold, unsigned int consecutiveReadings = 3);
       virtual void setLightLevelBroadcastThreshold(unsigned int threshold, unsigned int consecutiveReadings = 3);
+      virtual void setOnDataCallback(onDataCallbackFunc callback);
 
       // Handlers
       void onSetState();

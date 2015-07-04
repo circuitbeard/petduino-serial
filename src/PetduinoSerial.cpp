@@ -17,6 +17,7 @@ void _onSetData(){        _petduinoInstance->onSetData();        }
 
 // Constructor
 PetduinoSerial::PetduinoSerial() {
+  onDataCallBack = NULL;
 }
 
 // Setup inputs, outputs, etc. Call this from main arduino setup() method
@@ -177,6 +178,11 @@ void PetduinoSerial::setLightLevelBroadcastThreshold(unsigned int threshold, uns
   ldrConsecutiveReadings = consecutiveReadings;
 }
 
+// Sets the on data callback function
+void PetduinoSerial::setOnDataCallback(onDataCallbackFunc callback) {
+  onDataCallBack = callback;
+}
+
 // Set state command handler
 void PetduinoSerial::onSetState()
 {
@@ -235,5 +241,13 @@ void PetduinoSerial::onGetLightLevel()
 // Set data command handler
 void PetduinoSerial::onSetData()
 {
-  //TODO: Create user definable callback
+  // Make sure we have a callback function registered
+  if (onDataCallBack != NULL) {
+
+    // Read the string param
+    char *data = cmdMessenger.readStringArg();
+
+    // Call the callback function
+    (*onDataCallBack)(data);
+  }
 }
