@@ -58,8 +58,14 @@ class PetduinoSerial : public Petduino {
 
       float lastTempReading = 0;
       int lastLdrReading = 0;
-      bool lastBtn1Reading = false;
-      bool lastBtn2Reading = false;
+
+      int serialBtn1State = HIGH;
+      int serialBtn1LastState = HIGH;
+      unsigned long serialBtn1DebounceTimestamp;
+
+      int serialBtn2State = HIGH;
+      int serialBtn2LastState = HIGH;
+      unsigned long serialBtn2DebounceTimestamp;
 
       onDataCallbackFunc onDataCallBack;
 

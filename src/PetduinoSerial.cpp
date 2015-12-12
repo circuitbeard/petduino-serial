@@ -59,17 +59,15 @@ void PetduinoSerial::update() {
   cmdMessenger.feedinSerialData();
 
   // Check for btn1 state change
-  bool btn1Reading = isBtn1Held();
-  if(btn1Reading != lastBtn1Reading) {
-    lastBtn1Reading = btn1Reading;
-    cmdMessenger.sendCmd(BTN1_EVENT, btn1Reading);
+  bool btn1StateChanged = Petduino::debounce(BTN1, serialBtn1State, serialBtn1LastState, serialBtn1DebounceTimestamp);
+  if(btn1StateChanged) {
+    cmdMessenger.sendCmd(BTN1_EVENT, serialBtn1State == LOW);
   }
 
   // Check for btn2 state change
-  bool btn2Reading = isBtn2Held();
-  if(btn2Reading != lastBtn2Reading) {
-    lastBtn2Reading = btn2Reading;
-    cmdMessenger.sendCmd(BTN2_EVENT, btn2Reading);
+  bool btn2StateChanged = Petduino::debounce(BTN2, serialBtn2State, serialBtn2LastState, serialBtn2DebounceTimestamp);
+  if(btn2StateChanged) {
+    cmdMessenger.sendCmd(BTN2_EVENT, serialBtn2State == LOW);
   }
 
   // Check for temperature state changed
